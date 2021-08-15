@@ -58,6 +58,7 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         this.commandHandler = new CommandHandler(this);
         commandHandler.register(new FlyCommand());
+	commandHandler.registerCommands();
     }
 
 }
