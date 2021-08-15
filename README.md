@@ -8,32 +8,32 @@ Simple Reflection Command API that just does what you want it to do without any 
 * Maven
 
 ```xml
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository
+	<repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository
 ```
 
 ```xml
 	<dependency>
 	    <groupId>com.github.therealdamt</groupId>
 	    <artifactId>commandapi</artifactId>
-	    <version>1.0.0</version>
+	    <version>1.1.0</version>
 	</dependency>
 ```
 
 * Gradle
 
 ```gradle
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+  repositories {
+	        ...
+	        maven { url 'https://jitpack.io' }
+	}
 ```
 
 ```gradle
   dependencies {
-	        implementation 'com.github.therealdamt:commandapi:Tag'
+	        implementation 'com.github.therealdamt:commandapi:1.1.0'
 	}
 ```
 
