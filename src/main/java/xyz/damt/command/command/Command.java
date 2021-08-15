@@ -23,6 +23,7 @@ public class Command {
     private final String[] aliases;
     private final boolean async;
     private final Method method;
+    private final Object object;
 
     private final CommandExecutor commandExecutor;
     private final List<Command> subCommands = new LinkedList<>();
@@ -40,7 +41,9 @@ public class Command {
      * @param async       if the command should be ran async or not
      */
 
-    public Command(String name, String[] aliases, Method method, String description, String usage, boolean async) {
+    public Command(Object object, String name, String[] aliases, Method method, String description, String usage, boolean async) {
+        this.object = object;
+
         this.name = name;
         this.aliases = aliases;
         this.method = method;
@@ -79,9 +82,9 @@ public class Command {
 
         if (player) {
             Player player = (Player) commandSender;
-            method.invoke(this, player, args);
+            method.invoke(object, player, args);
         } else {
-            method.invoke(this, commandSender, args);
+            method.invoke(object, commandSender, args);
         }
     }
 

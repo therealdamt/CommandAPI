@@ -92,7 +92,7 @@ public class CommandFinder {
 
             if (commandAnnotation != null) {
                 Permission permissionAnnotation = method.getAnnotation(Permission.class);
-                Command command = new Command(commandAnnotation.value(), commandAnnotation.aliases(), method, commandAnnotation.description(), commandAnnotation.usage(), commandAnnotation.async());
+                Command command = new Command(object, commandAnnotation.value(), commandAnnotation.aliases(), method, commandAnnotation.description(), commandAnnotation.usage(), commandAnnotation.async());
 
                 if (permissionAnnotation != null) {
                     command.setPermission(permissionAnnotation.permission());
