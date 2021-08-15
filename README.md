@@ -65,7 +65,7 @@ public class Main extends JavaPlugin {
 
 * Example command class
 
-```
+```java
 public class FlyCommand {
 
     /**
