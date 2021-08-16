@@ -1,8 +1,6 @@
 # CommandAPI
 Simple Reflection Command API that just does what you want it to do without any problems.
 
-* Currently not tested, please do not use unless this read me is changed.
-
 ### Importing
 
 * Maven
