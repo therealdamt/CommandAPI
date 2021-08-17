@@ -40,12 +40,11 @@ Simple Reflection Command API that just does what you want it to do without any 
 * Example main class
 
 ```java
+@Getter
 public class Main extends JavaPlugin {
 
     @Getter
     private static Main instance;
-
-    private CommandHandler commandHandler;
 
     @Override
     public void onLoad() {
@@ -54,9 +53,8 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.commandHandler = new CommandHandler(this);
-        commandHandler.register(new FlyCommand());
-	commandHandler.registerCommands();
+        new CommandHandler(this).bind(ItemStack.class, new ItemStackProvider())
+                .register(new FlyCommand(), new ItemStackCommand()).registerCommands();
     }
 
 }
@@ -65,26 +63,30 @@ public class Main extends JavaPlugin {
 * Example command class
 
 ```java
-public class FlyCommand {
+public class ItemStackCommand {
 
-    /**
-     * So this is a simple command example
-     * There are 2 rules to every command:
-     * <p>
-     * 1- Must have a sender could be a player or a command sender
-     * 2- Must have an array of strings
-     *
-     * @param player sender
-     * @param args   arguments to execute with
-     */
+    @Command(value = "kekw", async = true, usage = "/kekw itemStack", description = "Just makes an itemstack lol")
+    @Permission(permission = "kekw.kekew", message = "no perm noob")
+    public void itemStackCommand(@Sender Player player, @Name("itemStack") ItemStack itemStack) {
+        player.getInventory().addItem(itemStack);
+        player.sendMessage(ChatColor.GREEN + "Gave ya your itemstack!");
+    }
 
-    @Command(value = "fly", description = "Fly Command", usage = "fly")
-    @Permission(permission = "command.fly", message = "You may not use this command!")
-    public void flyCommand(@Sender Player player, String[] args) {
-        player.setAllowFlight(!player.getAllowFlight());
+}
+```
 
-        String isFlying = player.getAllowFlight() ? "&aenabled" : "&cdisabled";
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYour flying is now " + isFlying));
+#Example provider
+
+```java
+public class ItemStackProvider implements CommandProvider<ItemStack> {
+
+    @Override
+    public ItemStack provide(String s) throws CommandProviderNullException {
+
+        if (!s.equalsIgnoreCase("itemStack"))
+            throw new CommandProviderNullException(ChatColor.RED + "You need to type 'itemStack' to get this provider!");
+
+        return new ItemStack(Material.DIRT);
     }
 
 }
