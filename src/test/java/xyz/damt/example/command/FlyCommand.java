@@ -10,13 +10,11 @@ public class FlyCommand {
 
     /**
      * So this is a simple command example
-     * There are 2 rules to every command:
-     * <p>
+     * There is 1 rule to every command:
+     *
      * 1- Must have a sender could be a player or a command sender
-     * 2- Must have an array of strings
      *
      * @param player sender
-     * @param args   arguments to execute with
      */
 
     @Command(value = "fly", description = "Fly Command", usage = "fly")
