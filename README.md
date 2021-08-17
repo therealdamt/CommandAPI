@@ -75,7 +75,7 @@ public class ItemStackCommand {
 }
 ```
 
-#Example provider
+* Example provider
 
 ```java
 public class ItemStackProvider implements CommandProvider<ItemStack> {
