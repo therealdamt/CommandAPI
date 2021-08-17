@@ -16,7 +16,7 @@ Simple Reflection Command API that just does what you want it to do without any 
 	<dependency>
 	    <groupId>com.github.therealdamt</groupId>
 	    <artifactId>commandapi</artifactId>
-	    <version>1.1.0</version>
+	    <version>1.2.0</version>
 	</dependency>
 ```
 
