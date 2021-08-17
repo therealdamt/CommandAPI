@@ -37,6 +37,7 @@ public class CommandProviderHandler {
         this.register(Float.class, new FloatCommandProvider());
         this.register(Boolean.class, new BooleanCommandProvider());
         this.register(Double.class, new DoubleCommandProvider());
+        this.register(String[].class, new StringArrayCommandProvider());
 
         this.register(Player.class, new PlayerCommandProvider(commandHandler.getJavaPlugin()));
         this.register(OfflinePlayer.class, new OfflinePlayerCommandProvider(commandHandler.getJavaPlugin()));
