@@ -11,7 +11,6 @@ import xyz.damt.command.provider.CommandProviderHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
 public class CommandHandler {
 
     @Getter
@@ -30,16 +29,17 @@ public class CommandHandler {
      */
 
     public CommandHandler(JavaPlugin javaPlugin) {
+        instance = this;
         this.javaPlugin = javaPlugin;
 
-        this.commandProviderHandler = new CommandProviderHandler();
+        this.commandProviderHandler = new CommandProviderHandler(this);
         this.commandRegistery = new CommandRegistery(javaPlugin);
     }
 
     /**
      * Binds a class to a command provider
      *
-     * @param clazz class to bind
+     * @param clazz           class to bind
      * @param commandProvider command provider
      * @return {@link CommandHandler}
      */
@@ -69,7 +69,7 @@ public class CommandHandler {
      */
 
     public final CommandHandler register(Object object, String name) {
-        commandMap.put(name, new CommandFinder(object).getCommand(name));
+        commandMap.put(name, new CommandFinder(object, commandProviderHandler).getCommand(name));
         return this;
     }
 
@@ -83,7 +83,7 @@ public class CommandHandler {
 
     public final CommandHandler register(Object... objects) {
         for (Object object : objects) {
-            CommandFinder commandFinder = new CommandFinder(object);
+            CommandFinder commandFinder = new CommandFinder(object, commandProviderHandler);
             commandFinder.getCommands().forEach(command -> commandMap.put(command.getName(), command));
         }
         return this;
@@ -101,4 +101,13 @@ public class CommandHandler {
         return this;
     }
 
+    /**
+     * Gets the java plugin
+     *
+     * @return {@link JavaPlugin}
+     */
+
+    public JavaPlugin getJavaPlugin() {
+        return javaPlugin;
+    }
 }

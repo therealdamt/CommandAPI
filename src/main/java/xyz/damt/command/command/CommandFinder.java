@@ -3,6 +3,7 @@ package xyz.damt.command.command;
 import org.bukkit.entity.Player;
 import xyz.damt.command.annotation.Permission;
 import xyz.damt.command.annotation.Sender;
+import xyz.damt.command.provider.CommandProviderHandler;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 public class CommandFinder {
 
     private final Object object;
+    private final CommandProviderHandler commandProviderHandler;
     private final List<Command> commands = new ArrayList<>();
 
     /**
@@ -22,8 +24,9 @@ public class CommandFinder {
      * @param object {@link Object}
      */
 
-    public CommandFinder(Object object) {
+    public CommandFinder(Object object, CommandProviderHandler commandProviderHandler) {
         this.object = object;
+        this.commandProviderHandler = commandProviderHandler;
 
         this.init();
         this.edit();
@@ -105,7 +108,7 @@ public class CommandFinder {
                     if (senderAnnotation != null) {
                         command.setPlayer(parameter.getType().equals(Player.class));
                     } else {
-                        command.getCommandParameters().add(new CommandParameter(command, parameter));
+                        command.getCommandParameters().add(new CommandParameter(command, parameter, commandProviderHandler));
                     }
                 }
 

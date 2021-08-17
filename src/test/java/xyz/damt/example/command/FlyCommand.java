@@ -21,7 +21,7 @@ public class FlyCommand {
 
     @Command(value = "fly", description = "Fly Command", usage = "fly")
     @Permission(permission = "command.fly", message = "You may not use this command!")
-    public void flyCommand(@Sender Player player, String[] args) {
+    public void flyCommand(@Sender Player player) {
         player.setAllowFlight(!player.getAllowFlight());
 
         String isFlying = player.getAllowFlight() ? "&aenabled" : "&cdisabled";

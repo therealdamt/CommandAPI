@@ -1,12 +1,8 @@
 package xyz.damt.command.provider.impl.normal;
 
 import org.bukkit.ChatColor;
-import xyz.damt.command.command.CommandParameter;
 import xyz.damt.command.exception.CommandProviderNullException;
 import xyz.damt.command.provider.CommandProvider;
-
-import java.util.Collections;
-import java.util.List;
 
 public class IntegerCommandProvider implements CommandProvider<Integer> {
 
@@ -21,11 +17,6 @@ public class IntegerCommandProvider implements CommandProvider<Integer> {
         }
 
         return i;
-    }
-
-    @Override
-    public List<String> suggestions(CommandParameter commandParameter) {
-        return Collections.emptyList();
     }
 
 }

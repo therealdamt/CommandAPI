@@ -7,7 +7,6 @@ import xyz.damt.command.command.CommandParameter;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CommandExecutor extends BukkitCommand {

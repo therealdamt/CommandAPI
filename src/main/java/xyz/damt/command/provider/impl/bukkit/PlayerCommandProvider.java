@@ -1,7 +1,6 @@
 package xyz.damt.command.provider.impl.bukkit;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,20 +11,20 @@ import xyz.damt.command.provider.CommandProvider;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OfflinePlayerProvider implements CommandProvider<OfflinePlayer> {
+public class PlayerCommandProvider implements CommandProvider<Player> {
 
     private final JavaPlugin javaPlugin;
 
-    public OfflinePlayerProvider(JavaPlugin javaPlugin) {
+    public PlayerCommandProvider(JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
     }
 
     @Override
-    public OfflinePlayer provide(String s) throws CommandProviderNullException {
-        final OfflinePlayer player = javaPlugin.getServer().getOfflinePlayer(s);
+    public Player provide(String s) throws CommandProviderNullException {
+        final Player player = javaPlugin.getServer().getPlayer(s);
 
-        if (!player.hasPlayedBefore() || player == null)
-            throw new CommandProviderNullException(ChatColor.RED + "The player you specified never logged on the server before!");
+        if (player == null)
+            throw new CommandProviderNullException(ChatColor.RED + "The player you specified is not online or does not exist!");
 
         return player;
     }
