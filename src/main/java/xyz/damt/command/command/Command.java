@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.damt.command.CommandHandler;
+import xyz.damt.command.exception.CommandProviderNullException;
 import xyz.damt.command.executor.CommandExecutor;
 
 import java.lang.reflect.Method;
@@ -27,6 +28,7 @@ public class Command {
 
     private final CommandExecutor commandExecutor;
     private final List<Command> subCommands = new LinkedList<>();
+    private final List<CommandParameter> commandParameters = new LinkedList<>();
 
     private boolean player;
     private String permission, permissionMessage;
@@ -80,11 +82,34 @@ public class Command {
             return;
         }
 
+        if (args.length < commandParameters.size()) {
+            commandSender.sendMessage(ChatColor.RED + "Wrong Usage: " + usage);
+            return;
+        }
+
+        List<Object> objects = new LinkedList<>();
+
+        commandParameters.forEach(commandParameter -> {
+
+            try {
+                objects.add(commandParameter.getCommandProvider().provide(args[commandParameters.indexOf(commandParameter)]));
+            } catch (CommandProviderNullException e) {
+                if (e.getMessage() == null) {
+                    commandSender.sendMessage(ChatColor.RED + "The argument '" + commandParameter.getName() + "' is null!");
+                    return;
+                }
+
+                commandSender.sendMessage(e.getMessage());
+                return;
+            }
+
+        });
+
         if (player) {
             Player player = (Player) commandSender;
-            method.invoke(object, player, args);
+            method.invoke(object, player, objects.toArray());
         } else {
-            method.invoke(object, commandSender, args);
+            method.invoke(object, commandSender, objects.toArray());
         }
     }
 

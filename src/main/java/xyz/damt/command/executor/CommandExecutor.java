@@ -3,8 +3,10 @@ package xyz.damt.command.executor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import xyz.damt.command.command.Command;
+import xyz.damt.command.command.CommandParameter;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,14 +60,16 @@ public class CommandExecutor extends BukkitCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-        final List<String> strings = new LinkedList<>();
+        for (int i = 0; i < args.length; i++) {
+            CommandParameter commandParameter = command.getCommandParameters().get(i);
 
-        command.getSubCommands().forEach(command1 -> {
-            String[] commandSplit = command1.getName().split("\\s+");
-            strings.add(commandSplit[1]);
-        });
+            if (commandParameter == null)
+                return Collections.emptyList();
 
-        return strings;
+            return commandParameter.getCommandProvider().suggestions(commandParameter);
+        }
+
+        return Collections.emptyList();
     }
 
 }

@@ -5,6 +5,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.damt.command.command.Command;
 import xyz.damt.command.command.CommandFinder;
 import xyz.damt.command.command.CommandRegistery;
+import xyz.damt.command.provider.CommandProvider;
+import xyz.damt.command.provider.CommandProviderHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +19,7 @@ public class CommandHandler {
 
     private final Map<String, Command> commandMap = new HashMap<>();
     private final JavaPlugin javaPlugin;
+    private final CommandProviderHandler commandProviderHandler;
     private final CommandRegistery commandRegistery;
 
     /**
@@ -28,7 +31,22 @@ public class CommandHandler {
 
     public CommandHandler(JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
+
+        this.commandProviderHandler = new CommandProviderHandler();
         this.commandRegistery = new CommandRegistery(javaPlugin);
+    }
+
+    /**
+     * Binds a class to a command provider
+     *
+     * @param clazz class to bind
+     * @param commandProvider command provider
+     * @return {@link CommandHandler}
+     */
+
+    public final CommandHandler bind(Class<?> clazz, CommandProvider<?> commandProvider) {
+        commandProviderHandler.register(clazz, commandProvider);
+        return this;
     }
 
     /**
@@ -79,7 +97,7 @@ public class CommandHandler {
      */
 
     public final CommandHandler registerCommands() {
-        commandMap.values().forEach(command -> commandRegistery.registerCommand(command));
+        commandMap.values().forEach(commandRegistery::registerCommand);
         return this;
     }
 

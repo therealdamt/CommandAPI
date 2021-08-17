@@ -104,6 +104,8 @@ public class CommandFinder {
 
                     if (senderAnnotation != null) {
                         command.setPlayer(parameter.getType().equals(Player.class));
+                    } else {
+                        command.getCommandParameters().add(new CommandParameter(command, parameter));
                     }
                 }
 
