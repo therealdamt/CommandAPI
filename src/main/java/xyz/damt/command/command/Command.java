@@ -10,8 +10,10 @@ import org.bukkit.entity.Player;
 import xyz.damt.command.CommandHandler;
 import xyz.damt.command.exception.CommandProviderNullException;
 import xyz.damt.command.executor.CommandExecutor;
+import xyz.damt.command.help.HelpCommandService;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,8 +29,10 @@ public class Command {
     private final Object object;
 
     private final CommandExecutor commandExecutor;
-    private final List<Command> subCommands = new LinkedList<>();
-    private final List<CommandParameter> commandParameters = new LinkedList<>();
+    private final HelpCommandService helpCommandService;
+
+    private final List<Command> subCommands = new ArrayList<>();
+    private final List<CommandParameter> commandParameters = new ArrayList<>();
 
     private boolean player;
     private String permission, permissionMessage;
@@ -43,7 +47,7 @@ public class Command {
      * @param async       if the command should be ran async or not
      */
 
-    public Command(Object object, String name, String[] aliases, Method method, String description, String usage, boolean async) {
+    public Command(Object object, String name, String[] aliases, Method method, String description, String usage, HelpCommandService helpCommandService, boolean async) {
         this.object = object;
 
         this.name = name;
@@ -53,6 +57,7 @@ public class Command {
         this.async = async;
         this.usage = usage;
 
+        this.helpCommandService = helpCommandService;
         this.commandExecutor = new CommandExecutor(this);
     }
 
@@ -82,6 +87,11 @@ public class Command {
             return;
         }
 
+        if (args.length == 0 && !getSubCommands().isEmpty() && helpCommandService != null) {
+            helpCommandService.get(this, getSubCommands()).forEach(commandSender::sendMessage);
+            return;
+        }
+
         if (args.length < commandParameters.size()) {
             commandSender.sendMessage(ChatColor.RED + "Wrong Usage: " + usage);
             return;
@@ -89,8 +99,7 @@ public class Command {
 
         List<Object> objects = new LinkedList<>();
 
-        commandParameters.forEach(commandParameter -> {
-
+        for (CommandParameter commandParameter : commandParameters) {
             try {
                 objects.add(commandParameter.getCommandProvider().provide(args[commandParameters.indexOf(commandParameter)]));
             } catch (CommandProviderNullException e) {
@@ -98,12 +107,10 @@ public class Command {
                     commandSender.sendMessage(ChatColor.RED + "The argument '" + commandParameter.getName() + "' is null!");
                     return;
                 }
-
                 commandSender.sendMessage(e.getMessage());
                 return;
             }
-
-        });
+        }
 
         if (player) {
             Player player = (Player) commandSender;

@@ -1,5 +1,6 @@
 package xyz.damt.command.executor;
 
+import com.google.common.collect.Lists;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import xyz.damt.command.command.Command;
@@ -59,16 +60,12 @@ public class CommandExecutor extends BukkitCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-        for (int i = 0; i < args.length; i++) {
-            CommandParameter commandParameter = command.getCommandParameters().get(i);
+        CommandParameter commandParameter = command.getCommandParameters().get(args.length);
 
-            if (commandParameter == null)
-                return Collections.emptyList();
+        if (commandParameter == null)
+            return Collections.emptyList();
 
-            return commandParameter.getCommandProvider().suggestions(commandParameter);
-        }
-
-        return Collections.emptyList();
+        return commandParameter.getCommandProvider().suggestions(commandParameter);
     }
 
 }

@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.damt.command.command.Command;
 import xyz.damt.command.command.CommandFinder;
 import xyz.damt.command.command.CommandRegistery;
+import xyz.damt.command.help.HelpCommandService;
 import xyz.damt.command.provider.CommandProvider;
 import xyz.damt.command.provider.CommandProviderHandler;
 
@@ -20,6 +21,8 @@ public class CommandHandler {
     private final JavaPlugin javaPlugin;
     private final CommandProviderHandler commandProviderHandler;
     private final CommandRegistery commandRegistery;
+
+    private HelpCommandService helpCommandService;
 
     /**
      * Command Handler that handles the whole
@@ -69,7 +72,7 @@ public class CommandHandler {
      */
 
     public final CommandHandler register(Object object, String name) {
-        commandMap.put(name, new CommandFinder(object, commandProviderHandler).getCommand(name));
+        commandMap.put(name, new CommandFinder(object, commandProviderHandler, helpCommandService).getCommand(name));
         return this;
     }
 
@@ -83,9 +86,21 @@ public class CommandHandler {
 
     public final CommandHandler register(Object... objects) {
         for (Object object : objects) {
-            CommandFinder commandFinder = new CommandFinder(object, commandProviderHandler);
+            CommandFinder commandFinder = new CommandFinder(object, commandProviderHandler, helpCommandService);
             commandFinder.getCommands().forEach(command -> commandMap.put(command.getName(), command));
         }
+        return this;
+    }
+
+    /**
+     * Sets the help command service
+     *
+     * @param helpCommandService help command service to set to
+     * @return {@link CommandHandler}
+     */
+
+    public final CommandHandler helpService(HelpCommandService helpCommandService) {
+        this.helpCommandService = helpCommandService;
         return this;
     }
 
@@ -110,4 +125,5 @@ public class CommandHandler {
     public JavaPlugin getJavaPlugin() {
         return javaPlugin;
     }
+
 }

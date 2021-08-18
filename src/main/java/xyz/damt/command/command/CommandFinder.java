@@ -3,6 +3,7 @@ package xyz.damt.command.command;
 import org.bukkit.entity.Player;
 import xyz.damt.command.annotation.Permission;
 import xyz.damt.command.annotation.Sender;
+import xyz.damt.command.help.HelpCommandService;
 import xyz.damt.command.provider.CommandProviderHandler;
 
 import java.lang.reflect.Method;
@@ -14,7 +15,10 @@ import java.util.stream.Collectors;
 public class CommandFinder {
 
     private final Object object;
+
     private final CommandProviderHandler commandProviderHandler;
+    private final HelpCommandService helpCommandService;
+
     private final List<Command> commands = new ArrayList<>();
 
     /**
@@ -24,9 +28,11 @@ public class CommandFinder {
      * @param object {@link Object}
      */
 
-    public CommandFinder(Object object, CommandProviderHandler commandProviderHandler) {
+    public CommandFinder(Object object, CommandProviderHandler commandProviderHandler, HelpCommandService helpCommandService) {
         this.object = object;
+
         this.commandProviderHandler = commandProviderHandler;
+        this.helpCommandService = helpCommandService;
 
         this.init();
         this.edit();
@@ -95,7 +101,7 @@ public class CommandFinder {
 
             if (commandAnnotation != null) {
                 Permission permissionAnnotation = method.getAnnotation(Permission.class);
-                Command command = new Command(object, commandAnnotation.value(), commandAnnotation.aliases(), method, commandAnnotation.description(), commandAnnotation.usage(), commandAnnotation.async());
+                Command command = new Command(object, commandAnnotation.value(), commandAnnotation.aliases(), method, commandAnnotation.description(), commandAnnotation.usage(), helpCommandService, commandAnnotation.async());
 
                 if (permissionAnnotation != null) {
                     command.setPermission(permissionAnnotation.permission());
