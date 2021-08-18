@@ -10,6 +10,7 @@ import xyz.damt.command.provider.impl.normal.*;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class CommandProviderHandler {
 
@@ -37,6 +38,7 @@ public class CommandProviderHandler {
         this.register(Float.class, new FloatCommandProvider());
         this.register(Boolean.class, new BooleanCommandProvider());
         this.register(Double.class, new DoubleCommandProvider());
+        this.register(UUID.class, new UUIDCommandProvider());
         this.register(String[].class, new StringArrayCommandProvider());
 
         this.register(Player.class, new PlayerCommandProvider(commandHandler.getJavaPlugin()));

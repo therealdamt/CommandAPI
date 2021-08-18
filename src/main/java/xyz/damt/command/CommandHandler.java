@@ -44,7 +44,7 @@ public class CommandHandler {
      * @return {@link CommandHandler}
      */
 
-    public final CommandHandler bind(Class<?> clazz, CommandProvider<?> commandProvider) {
+    public final <T> CommandHandler bind(Class<T> clazz, CommandProvider<T> commandProvider) {
         commandProviderHandler.register(clazz, commandProvider);
         return this;
     }
