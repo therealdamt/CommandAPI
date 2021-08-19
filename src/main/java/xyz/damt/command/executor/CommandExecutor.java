@@ -1,13 +1,11 @@
 package xyz.damt.command.executor;
 
-import com.google.common.collect.Lists;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import xyz.damt.command.command.Command;
 import xyz.damt.command.command.CommandParameter;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class CommandExecutor extends BukkitCommand {
@@ -63,7 +61,7 @@ public class CommandExecutor extends BukkitCommand {
         CommandParameter commandParameter = command.getCommandParameters().get(args.length);
 
         if (commandParameter == null)
-            return Collections.emptyList();
+            return command.getTabComplete().get(command, command.getSubCommands(), args);
 
         return commandParameter.getCommandProvider().suggestions(commandParameter);
     }

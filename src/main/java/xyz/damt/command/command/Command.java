@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.damt.command.CommandHandler;
+import xyz.damt.command.complete.TabComplete;
 import xyz.damt.command.exception.CommandProviderNullException;
 import xyz.damt.command.executor.CommandExecutor;
 import xyz.damt.command.help.HelpCommandService;
@@ -30,6 +31,7 @@ public class Command {
 
     private final CommandExecutor commandExecutor;
     private final HelpCommandService helpCommandService;
+    private final TabComplete tabComplete;
 
     private final List<Command> subCommands = new ArrayList<>();
     private final List<CommandParameter> commandParameters = new ArrayList<>();
@@ -47,7 +49,7 @@ public class Command {
      * @param async       if the command should be ran async or not
      */
 
-    public Command(Object object, String name, String[] aliases, Method method, String description, String usage, HelpCommandService helpCommandService, boolean async) {
+    public Command(Object object, String name, String[] aliases, Method method, String description, String usage, HelpCommandService helpCommandService, TabComplete tabComplete, boolean async) {
         this.object = object;
 
         this.name = name;
@@ -58,6 +60,7 @@ public class Command {
         this.usage = usage;
 
         this.helpCommandService = helpCommandService;
+        this.tabComplete = tabComplete;
         this.commandExecutor = new CommandExecutor(this);
     }
 
@@ -103,12 +106,15 @@ public class Command {
             try {
                 objects.add(commandParameter.getCommandProvider().provide(args[commandParameters.indexOf(commandParameter)]));
             } catch (CommandProviderNullException e) {
-                if (e.getMessage() == null) {
-                    commandSender.sendMessage(ChatColor.RED + "The argument '" + commandParameter.getName() + "' is null!");
+                if (!commandParameter.isOptional()) {
+                    if (e.getMessage() == null) {
+                        commandSender.sendMessage(ChatColor.RED + "The argument '" + commandParameter.getName() + "' is null!");
+                        return;
+                    }
+
+                    commandSender.sendMessage(e.getMessage());
                     return;
                 }
-                commandSender.sendMessage(e.getMessage());
-                return;
             }
         }
 

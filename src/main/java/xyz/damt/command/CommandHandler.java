@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.damt.command.command.Command;
 import xyz.damt.command.command.CommandFinder;
 import xyz.damt.command.command.CommandRegistery;
+import xyz.damt.command.complete.TabComplete;
 import xyz.damt.command.help.HelpCommandService;
 import xyz.damt.command.provider.CommandProvider;
 import xyz.damt.command.provider.CommandProviderHandler;
@@ -23,6 +24,7 @@ public class CommandHandler {
     private final CommandRegistery commandRegistery;
 
     private HelpCommandService helpCommandService;
+    private TabComplete tabComplete;
 
     /**
      * Command Handler that handles the whole
@@ -72,7 +74,7 @@ public class CommandHandler {
      */
 
     public final CommandHandler register(Object object, String name) {
-        commandMap.put(name, new CommandFinder(object, commandProviderHandler, helpCommandService).getCommand(name));
+        commandMap.put(name, new CommandFinder(object, commandProviderHandler, helpCommandService, tabComplete).getCommand(name));
         return this;
     }
 
@@ -86,7 +88,7 @@ public class CommandHandler {
 
     public final CommandHandler register(Object... objects) {
         for (Object object : objects) {
-            CommandFinder commandFinder = new CommandFinder(object, commandProviderHandler, helpCommandService);
+            CommandFinder commandFinder = new CommandFinder(object, commandProviderHandler, helpCommandService, tabComplete);
             commandFinder.getCommands().forEach(command -> commandMap.put(command.getName(), command));
         }
         return this;
@@ -101,6 +103,18 @@ public class CommandHandler {
 
     public final CommandHandler helpService(HelpCommandService helpCommandService) {
         this.helpCommandService = helpCommandService;
+        return this;
+    }
+
+    /**
+     * Sets the tab complete of a command
+     *
+     * @param tabComplete tab completer to set to
+     * @return {@link CommandHandler}
+     */
+
+    public final CommandHandler tabComplete(TabComplete tabComplete) {
+        this.tabComplete = tabComplete;
         return this;
     }
 
