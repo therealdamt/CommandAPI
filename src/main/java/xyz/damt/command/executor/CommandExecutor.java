@@ -58,7 +58,7 @@ public class CommandExecutor extends BukkitCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-        CommandParameter commandParameter = command.getCommandParameters().get(args.length);
+        CommandParameter commandParameter = command.getCommandParameters().get(args.length - 1);
 
         if (commandParameter == null)
             return command.getTabComplete().get(command, command.getSubCommands(), args);
