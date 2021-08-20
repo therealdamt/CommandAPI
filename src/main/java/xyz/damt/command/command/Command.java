@@ -100,7 +100,14 @@ public class Command {
             return;
         }
 
-        List<Object> objects = new LinkedList<>();
+        List<Object> objects = new ArrayList<>();
+
+        if (player) {
+            Player player = (Player) commandSender;
+            objects.add(player);
+        } else {
+            objects.add(commandSender);
+        }
 
         for (CommandParameter commandParameter : commandParameters) {
             try {
@@ -118,12 +125,7 @@ public class Command {
             }
         }
 
-        if (player) {
-            Player player = (Player) commandSender;
-            method.invoke(object, player, objects.toArray());
-        } else {
-            method.invoke(object, commandSender, objects.toArray());
-        }
+        method.invoke(object, objects.toArray());
     }
 
 }
