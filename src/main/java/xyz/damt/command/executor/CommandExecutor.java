@@ -6,6 +6,7 @@ import xyz.damt.command.command.Command;
 import xyz.damt.command.command.CommandParameter;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandExecutor extends BukkitCommand {
@@ -58,6 +59,9 @@ public class CommandExecutor extends BukkitCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+        if (command.getSubCommands().isEmpty())
+            return Collections.emptyList();
+
         CommandParameter commandParameter = command.getCommandParameters().get(args.length - 1);
 
         if (commandParameter == null)
