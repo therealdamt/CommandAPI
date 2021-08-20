@@ -1,5 +1,5 @@
 # CommandAPI
-Simple Reflection Command API that just does what you want it to do without any problems.
+Annotation/Reflection Based Command API that just does what you want it to do without any problems.
 
 ### Importing
 
