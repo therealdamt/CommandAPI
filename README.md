@@ -1,5 +1,5 @@
 # CommandAPI
-Simple Reflection Command API that just does what you want it to do without any problems.
+Annotation/Reflection Based Command API that just does what you want it to do without any problems.
 
 ### Importing
 
@@ -16,7 +16,7 @@ Simple Reflection Command API that just does what you want it to do without any 
 	<dependency>
 	    <groupId>com.github.therealdamt</groupId>
 	    <artifactId>commandapi</artifactId>
-	    <version>1.2.0</version>
+	    <version>1.3.0</version>
 	</dependency>
 ```
 
@@ -40,21 +40,12 @@ Simple Reflection Command API that just does what you want it to do without any 
 * Example main class
 
 ```java
-@Getter
 public class Main extends JavaPlugin {
-
-    @Getter
-    private static Main instance;
-
     @Override
-    public void onLoad() {
-        instance = this;
-    }
-
-    @Override
-    public void onEnable() {
+    public void onEnable() { // You also have the default tab completer, and the default help service, new DefaultTabCompleter(); 
         new CommandHandler(this).bind(ItemStack.class, new ItemStackProvider())
-                .register(new FlyCommand(), new ItemStackCommand()).registerCommands();
+                .register(new FlyCommand(), new ItemStackCommand()).helpService(new HelpService())
+                .tabComplete(new TabCompleter()).registerCommands();
     }
 
 }
@@ -87,6 +78,32 @@ public class ItemStackProvider implements CommandProvider<ItemStack> {
             throw new CommandProviderNullException(ChatColor.RED + "You need to type 'itemStack' to get this provider!");
 
         return new ItemStack(Material.DIRT);
+    }
+
+}
+```
+
+* Example Help Service
+
+```java
+public class HelpService implements HelpCommandService {
+
+    @Override
+    public List<String> get(Command command, List<Command> subCommands) {
+        return subCommands.stream().map(command1 -> command.getUsage() + ", ").collect(Collectors.toList());
+    }
+
+}
+```
+
+* Example Tab Completer
+
+```java
+public class TabCompleter implements TabComplete {
+
+    @Override
+    public List<String> get(Command command, List<Command> subCommands, String[] args) {
+        return subCommands.stream().map(subCommand -> subCommand.getName() + "\n").collect(Collectors.toList());
     }
 
 }
