@@ -82,7 +82,7 @@ public class CommandFinder {
         commands.forEach(command -> {
             String[] args = command.getName().split("\\s+");
 
-            if (args.length > 0)
+            if (args.length > 1)
                 return;
 
             List<Command> subCommands = getCommands(args[0]);
