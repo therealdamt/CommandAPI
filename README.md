@@ -70,15 +70,27 @@ public class ItemStackCommand {
 * Example provider
 
 ```java
-public class ItemStackProvider implements CommandProvider<ItemStack> {
+public class PlayerCommandProvider implements CommandProvider<Player> {
+
+    private final JavaPlugin javaPlugin;
+
+    public PlayerCommandProvider(JavaPlugin javaPlugin) {
+        this.javaPlugin = javaPlugin;
+    }
 
     @Override
-    public ItemStack provide(String s) throws CommandProviderNullException {
+    public Player provide(String s) throws CommandProviderNullException {
+        final Player player = javaPlugin.getServer().getPlayer(s);
 
-        if (!s.equalsIgnoreCase("itemStack"))
-            throw new CommandProviderNullException(ChatColor.RED + "You need to type 'itemStack' to get this provider!");
+        if (player == null)
+            throw new CommandProviderNullException(ChatColor.RED + "The player you specified is not online or does not exist!");
 
-        return new ItemStack(Material.DIRT);
+        return player;
+    }
+
+    @Override
+    public List<String> suggestions(CommandParameter commandParameter) {
+        return javaPlugin.getServer().getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
     }
 
 }
