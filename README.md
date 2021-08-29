@@ -70,27 +70,17 @@ public class ItemStackCommand {
 * Example provider
 
 ```java
-public class PlayerCommandProvider implements CommandProvider<Player> {
-
-    private final JavaPlugin javaPlugin;
-
-    public PlayerCommandProvider(JavaPlugin javaPlugin) {
-        this.javaPlugin = javaPlugin;
-    }
+public class ItemStackProvider implements CommandProvider<ItemStack> {
 
     @Override
-    public Player provide(String s) throws CommandProviderNullException {
-        final Player player = javaPlugin.getServer().getPlayer(s);
+    public ItemStack provide(String s) throws CommandProviderNullException {
 
-        if (player == null)
-            throw new CommandProviderNullException(ChatColor.RED + "The player you specified is not online or does not exist!");
+	Material material = Material.getMaterial(s.toUpperCase());
 
-        return player;
-    }
+        if (material == null)
+            throw new CommandProviderNullException(ChatColor.RED + "It seems like you did not provide a valid material.");
 
-    @Override
-    public List<String> suggestions(CommandParameter commandParameter) {
-        return javaPlugin.getServer().getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
+        return new ItemStack(material);
     }
 
 }
@@ -103,7 +93,10 @@ public class HelpService implements HelpCommandService {
 
     @Override
     public List<String> get(Command command, List<Command> subCommands) {
-        return subCommands.stream().map(command1 -> command.getUsage() + ", ").collect(Collectors.toList());
+        return subCommands
+		.stream()
+		.map(command1 -> command.getUsage() + ", ")
+		.collect(Collectors.toList());
     }
 
 }
@@ -116,7 +109,10 @@ public class TabCompleter implements TabComplete {
 
     @Override
     public List<String> get(Command command, List<Command> subCommands, String[] args) {
-        return subCommands.stream().map(subCommand -> subCommand.getName() + "\n").collect(Collectors.toList());
+        return subCommands
+		.stream()
+		.map(subCommand -> subCommand.getName() + "\n")
+		.collect(Collectors.toList());
     }
 
 }
