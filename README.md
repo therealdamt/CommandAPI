@@ -16,8 +16,7 @@ Annotation/Reflection Based Command API that just does what you want it to do wi
 	<dependency>
 	    <groupId>com.github.therealdamt</groupId>
 	    <artifactId>commandapi</artifactId>
-	    <version>aa9298fe3e</version>
-	    <scope>provided</scope>
+	    <version>1.4.0</version>
 	</dependency>
 ```
 
@@ -32,7 +31,7 @@ Annotation/Reflection Based Command API that just does what you want it to do wi
 
 ```gradle
   dependencies {
-	        implementation 'com.github.therealdamt:commandapi:aa9298fe3e'
+	        implementation 'com.github.therealdamt:commandapi:1.4.0'
 	}
 ```
 
