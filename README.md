@@ -16,7 +16,8 @@ Annotation/Reflection Based Command API that just does what you want it to do wi
 	<dependency>
 	    <groupId>com.github.therealdamt</groupId>
 	    <artifactId>commandapi</artifactId>
-	    <version>1.3.0</version>
+	    <version>aa9298fe3e</version>
+	    <scope>provided</scope>
 	</dependency>
 ```
 
@@ -31,7 +32,7 @@ Annotation/Reflection Based Command API that just does what you want it to do wi
 
 ```gradle
   dependencies {
-	        implementation 'com.github.therealdamt:commandapi:1.1.0'
+	        implementation 'com.github.therealdamt:commandapi:aa9298fe3e'
 	}
 ```
 
@@ -74,10 +75,12 @@ public class ItemStackProvider implements CommandProvider<ItemStack> {
     @Override
     public ItemStack provide(String s) throws CommandProviderNullException {
 
-        if (!s.equalsIgnoreCase("itemStack"))
-            throw new CommandProviderNullException(ChatColor.RED + "You need to type 'itemStack' to get this provider!");
+	Material material = Material.getMaterial(s.toUpperCase());
 
-        return new ItemStack(Material.DIRT);
+        if (material == null)
+            throw new CommandProviderNullException(ChatColor.RED + "It seems like you did not provide a valid material.");
+
+        return new ItemStack(material);
     }
 
 }
@@ -90,7 +93,10 @@ public class HelpService implements HelpCommandService {
 
     @Override
     public List<String> get(Command command, List<Command> subCommands) {
-        return subCommands.stream().map(command1 -> command.getUsage() + ", ").collect(Collectors.toList());
+        return subCommands
+		.stream()
+		.map(command1 -> command.getUsage() + ", ")
+		.collect(Collectors.toList());
     }
 
 }
@@ -103,7 +109,10 @@ public class TabCompleter implements TabComplete {
 
     @Override
     public List<String> get(Command command, List<Command> subCommands, String[] args) {
-        return subCommands.stream().map(subCommand -> subCommand.getName() + "\n").collect(Collectors.toList());
+        return subCommands
+		.stream()
+		.map(subCommand -> subCommand.getName() + "\n")
+		.collect(Collectors.toList());
     }
 
 }
