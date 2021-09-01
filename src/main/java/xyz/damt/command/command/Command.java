@@ -79,15 +79,10 @@ public class Command {
 
             List<String> strings = new ArrayList<>(Arrays.asList(commandArg));
 
-            System.out.println("[0] - " + strings);
-
             List<String> argsList = new ArrayList<>(Arrays.asList(args));
 
             strings.removeIf(s -> !argsList.contains(s));
             commandArg = strings.toArray(new String[0]);
-
-            System.out.println("[1] - " + strings);
-            System.out.println("[2] - " + Arrays.toString(args));
 
             if ((original.length - 1) == commandArg.length && commandArg.length != 0 && commandArg[commandArg.length - 1].equalsIgnoreCase(args[commandArg.length - 1])) {
                 return command;
