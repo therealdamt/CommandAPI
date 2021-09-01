@@ -16,7 +16,6 @@ import xyz.damt.command.help.HelpCommandService;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -76,15 +75,21 @@ public class Command {
     public final Command getSubCommand(String[] args) {
         for (Command command : subCommands) {
             String[] commandArg = command.getName().split(" ");
+            String[] original = commandArg;
 
             List<String> strings = new ArrayList<>(Arrays.asList(commandArg));
+
+            System.out.println("[0] - " + strings);
+
             List<String> argsList = new ArrayList<>(Arrays.asList(args));
 
             strings.removeIf(s -> !argsList.contains(s));
-
             commandArg = strings.toArray(new String[0]);
 
-            if (commandArg.length != 0 && commandArg[commandArg.length - 1].equalsIgnoreCase(args[args.length - 1])) {
+            System.out.println("[1] - " + strings);
+            System.out.println("[2] - " + Arrays.toString(args));
+
+            if ((original.length - 1) == commandArg.length && commandArg.length != 0 && commandArg[commandArg.length - 1].equalsIgnoreCase(args[commandArg.length - 1])) {
                 return command;
             }
         }
@@ -163,7 +168,17 @@ public class Command {
 
         for (CommandParameter commandParameter : commandParameters) {
             try {
-                objects.add(commandParameter.getCommandProvider().provide(args[commandParameters.indexOf(commandParameter)]));
+                if (this.subCommand && subCommand != null && !skip) {
+                    String[] subArgs = subCommand.getName().split(" ");
+                    objects.add(commandParameter.getCommandProvider().provide(args[commandParameters.indexOf(commandParameter) + (subArgs.length - 1)]));
+                } else {
+                    objects.add(commandParameter.getCommandProvider().provide(args[commandParameters.indexOf(commandParameter)]));
+                }
+            } catch (ArrayIndexOutOfBoundsException exception) {
+                if (subCommand != null && !skip) {
+                    commandSender.sendMessage(ChatColor.RED + "Usage: " + subCommand.getUsage());
+                    return;
+                }
             } catch (CommandProviderNullException e) {
                 if (!commandParameter.isOptional()) {
                     if (e.getMessage() == null) {
