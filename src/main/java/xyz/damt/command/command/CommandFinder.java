@@ -86,6 +86,8 @@ public class CommandFinder {
                 return;
 
             List<Command> subCommands = getCommands(args[0]);
+            subCommands.forEach(command1 -> command1.setSubCommand(true));
+
             command.getSubCommands().addAll(subCommands);
         });
     }

@@ -15,6 +15,7 @@ import xyz.damt.command.help.HelpCommandService;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class Command {
     private final List<CommandParameter> commandParameters = new ArrayList<>();
 
     private boolean player;
+    private boolean subCommand;
     private String permission, permissionMessage;
 
     /**
@@ -65,6 +67,32 @@ public class Command {
     }
 
     /**
+     * Gets a sub command
+     *
+     * @param args arguments
+     * @return {@link Command}
+     */
+
+    public final Command getSubCommand(String[] args) {
+        for (Command command : subCommands) {
+            String[] commandArg = command.getName().split(" ");
+
+            List<String> strings = new ArrayList<>(Arrays.asList(commandArg));
+            List<String> argsList = new ArrayList<>(Arrays.asList(args));
+
+            strings.removeIf(s -> !argsList.contains(s));
+
+            commandArg = strings.toArray(new String[0]);
+
+            if (commandArg.length != 0 && commandArg[commandArg.length - 1].equalsIgnoreCase(args[args.length - 1])) {
+                return command;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Executes the command
      *
      * @param commandSender sender of the command
@@ -72,11 +100,11 @@ public class Command {
      */
 
     @SneakyThrows
-    public void execute(CommandSender commandSender, String[] args) {
+    public void execute(CommandSender commandSender, String[] args, boolean skip) {
 
         if (async) {
             CommandHandler.getInstance().getJavaPlugin().getServer().getScheduler()
-                    .runTaskAsynchronously(CommandHandler.getInstance().getJavaPlugin(), () -> execute(commandSender, args));
+                    .runTaskAsynchronously(CommandHandler.getInstance().getJavaPlugin(), () -> execute(commandSender, args, skip));
             return;
         }
 
@@ -95,12 +123,36 @@ public class Command {
             return;
         }
 
+        Command subCommand = getSubCommand(args);
+
+        if (!skip) {
+            if (subCommand == null) {
+                if (helpCommandService == null) {
+                    this.execute(commandSender, args, true);
+                    return;
+                }
+
+                helpCommandService.get(this, getSubCommands()).forEach(commandSender::sendMessage);
+                return;
+            }
+        }
+
         if (args.length < commandParameters.size()) {
             commandSender.sendMessage(ChatColor.RED + "Wrong Usage: " + usage);
             return;
         }
 
         List<Object> objects = new ArrayList<>();
+        List<CommandParameter> commandParameters = this.commandParameters;
+
+        Method method = this.method;
+        Object object = this.object;
+
+        if (!skip) {
+            commandParameters = this.subCommand && subCommand != null ? subCommand.getCommandParameters() : this.commandParameters;
+            method = this.subCommand && subCommand != null ? subCommand.getMethod() : this.method;
+            object = this.subCommand && subCommand != null ? subCommand.getObject() : this.object;
+        }
 
         if (player) {
             Player player = (Player) commandSender;

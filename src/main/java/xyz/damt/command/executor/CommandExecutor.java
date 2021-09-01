@@ -41,7 +41,7 @@ public class CommandExecutor extends BukkitCommand {
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
-        command.execute(commandSender, strings);
+        command.execute(commandSender, strings, false);
         return false;
     }
 
@@ -64,8 +64,12 @@ public class CommandExecutor extends BukkitCommand {
 
         CommandParameter commandParameter = command.getCommandParameters().get(args.length - 1);
 
-        if (commandParameter == null)
+        if (commandParameter == null) {
+            if (command.getTabComplete() == null)
+                return Collections.emptyList();
+
             return command.getTabComplete().get(command, command.getSubCommands(), args);
+        }
 
         return commandParameter.getCommandProvider().suggestions(commandParameter);
     }
