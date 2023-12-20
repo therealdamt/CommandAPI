@@ -122,7 +122,4 @@ public class TabCompleter implements TabComplete {
 You have full rights to use this command api within your projects, but if possible to include credits that'd be amazing!
 
 ### Contact
-
-* [Telegram](https://t.me/therealdamt)
-* [Website](https://damt.xyz)
-* Discord | damt#0886
+Discord: bingbongwaseem
